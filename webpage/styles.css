@@ -1,0 +1,67 @@
+/* Base styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+}
+
+/* Dark blue page with subtle red corner shades */
+html, body { margin:0; padding:0; width:100%; min-height:100vh; }
+body {
+  background:
+    radial-gradient(circle at top right, rgba(139,0,0,0.14), transparent 20%),
+    radial-gradient(circle at bottom left, rgba(139,0,0,0.14), transparent 20%),
+    #021026;
+  background-attachment: fixed;
+  color: #f3f6fb;
+  font-family: Arial, sans-serif;
+}
+
+/* panels */
+.page {
+  background: rgba(255,255,255,0.03);
+  border-radius:8px;
+  margin:16px;
+  padding:20px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+}
+
+/* nav */
+.top-nav {
+  display:flex;
+  gap:8px;
+  padding:12px;
+  background:rgba(0,0,0,0.35);
+  backdrop-filter: blur(6px);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+
+/* header */
+header { position:relative; min-height:220px; overflow:hidden; }
+.header-image { position:relative; height:100%; }
+.cover-image { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; opacity:0.55; }
+h1,p { position:relative; z-index:1; color:#f6f9ff; text-shadow:0 2px 8px rgba(0,0,0,0.7); padding:20px 16px; }
+
+/* buttons */
+.btn-login, .btn-submit, .btn-cancel {
+  border:none; padding:8px 12px; border-radius:6px; cursor:pointer;
+}
+.btn-login { background: linear-gradient(180deg,#b22222,#8b0000); color:#fff; margin-left:8px; }
+.btn-submit { background: linear-gradient(180deg,#ff6b6b,#c0392b); color:#fff; }
+.btn-cancel { background:#444; color:#fff; }
+
+/* tables */
+table { width:100%; border-collapse:collapse; }
+th { background: rgba(10,43,74,0.6); color:#e9f2ff; padding:10px; text-align:left; }
+td { padding:8px; border-bottom:1px solid rgba(255,255,255,0.04); color:#eaf4ff; }
+
+/* login/register modal */
+.login-modal { display:none; position:fixed; inset:0; align-items:center; justify-content:center; background:rgba(0,0,0,0.6); z-index:10000; }
+.login-modal[aria-hidden="false"] { display:flex; }
+.login-panel { background: rgba(255,255,255,0.95); color:#111; width:360px; max-width:calc(100% - 40px); padding:20px; border-radius:8px; box-shadow:0 10px 30px rgba(0,0,0,0.3); }
+.login-panel label { display:block; margin:8px 0; font-size:14px; }
+.login-panel input, .login-panel select { width:100%; padding:8px; box-sizing:border-box; margin-top:6px; }
+
+/* footer */
+footer { padding:12px; text-align:center; background:rgba(0,0,0,0.25); color:#eaf4ff; border-top:1px solid rgba(255,255,255,0.04); }
