@@ -1998,7 +1998,7 @@ id,gender,age,hypertension,heart_disease,ever_married,work_type,Residence_type,a
 14287,Female,32,0,0,Yes,Private,Urban,68.66,22.6,Unknown,0
 60139,Female,32,0,0,Yes,Self-employed,Rural,128.72,26.3,smokes,0
 2447,Female,63,0,0,Yes,Private,Urban,85.04,29.7,formerly smoked,0
-42500,Male,0.24,0,0,No,children,Rural,146.97,18.5,Unknown,0
+42500,Male,24,0,0,No,children,Rural,146.97,18.5,Unknown,0
 44391,Male,54,0,0,Yes,Private,Urban,65.69,21.4,never smoked,0
 12741,Female,25,0,0,Yes,Private,Rural,97.52,45.5,formerly smoked,0
 15418,Female,80,0,0,Yes,Self-employed,Rural,90.43,34.2,never smoked,0

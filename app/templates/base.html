@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{% block title %}Stroke Records Portal{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'dark-blue': '#021026',
+              'navy': '#0a2b4a',
+              'crimson': '#8b0000',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background: 
+          radial-gradient(circle at top right, rgba(139,0,0,0.14), transparent 20%),
+          radial-gradient(circle at bottom left, rgba(139,0,0,0.14), transparent 20%),
+          #021026;
+        background-attachment: fixed;
+      }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-screen text-gray-100">
+  <!-- Top Navigation -->
+  <nav class="bg-black/35 backdrop-blur-md border-b border-white/5 px-6 py-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center space-x-8">
+        <h1 class="text-2xl font-bold text-white">{% block nav_title %}Stroke Records Portal{% endblock %}</h1>
+        <div class="hidden md:flex space-x-4">
+          <a href="{{ url_for('dashboard.dashboard') }}" class="text-gray-300 hover:text-white transition-colors {% if request.endpoint == 'dashboard.dashboard' %}text-white font-semibold{% endif %}">
+            Dashboard
+          </a>
+          <a href="{{ url_for('dashboard.get_data') }}" class="text-gray-300 hover:text-white transition-colors {% if request.endpoint == 'dashboard.get_data' %}text-white font-semibold{% endif %}">
+           Patients
+          </a>
+          <a href="{{ url_for('dashboard.add_patient') }}" class="text-gray-300 hover:text-white transition-colors {% if request.endpoint == 'dashboard.add_patient' %}text-white font-semibold{% endif %}">
+            Add Patient
+          </a>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <span class="text-sm text-gray-300">Dr. Admin User</span>
+        <a href="{{ url_for('auth.logout') }}" class="px-4 py-2 rounded-lg bg-gradient-to-b from-red-700 to-crimson text-white text-sm hover:from-red-800 hover:to-red-900 transition-all">
+          Logout
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  {% block content %}{% endblock %}
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/papaparse@latest/papaparse.min.js"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

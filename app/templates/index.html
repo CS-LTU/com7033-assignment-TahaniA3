@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Stroke Records - Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'dark-blue': '#021026',
+              'navy': '#0a2b4a',
+              'crimson': '#8b0000',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background: 
+          radial-gradient(circle at top right, rgba(139,0,0,0.14), transparent 20%),
+          radial-gradient(circle at bottom left, rgba(139,0,0,0.14), transparent 20%),
+          #021026;
+        background-attachment: fixed;
+      }
+    </style>
+</head>
+<body class="min-h-screen text-gray-100">
+  <nav class="top-nav flex gap-2 p-3 bg-black/35 backdrop-blur-md border-b border-white/5">
+    <button data-page="home" class="nav-btn px-4 py-2 rounded-lg bg-navy/60 hover:bg-navy/80 transition-colors">Home</button>
+    <button data-page="records" class="nav-btn records-only px-4 py-2 rounded-lg bg-navy/60 hover:bg-navy/80 transition-colors hidden">Patient Records</button>
+    <button data-page="userManagement" class="nav-btn admin-only px-4 py-2 rounded-lg bg-navy/60 hover:bg-navy/80 transition-colors hidden">User Management</button>
+  </nav>
+
+  <header class="relative min-h-[220px] overflow-hidden">
+    <div class="header-image relative h-full">
+      <img src="../gallery/image3.jpg" alt="Covering" class="cover-image absolute inset-0 w-full h-full object-cover opacity-55 z-0">
+      <h1 class="relative z-10 text-4xl font-bold text-white text-center pt-8 px-4 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">Stroke Records Portal</h1>
+      <p class="relative z-10 text-lg text-white text-center px-4 mt-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">Secure demo — only registered users with granted permissions can view records.</p>
+      <div class="absolute right-4 top-4 z-10 flex gap-2">
+        <a href= "{{ url_for('auth.register') }}"  class="btn-login px-4 py-2 rounded-lg bg-gradient-to-b from-red-700 to-crimson text-white shadow-md hover:shadow-lg transition-shadow">Register</a>
+        <a href= "{{ url_for('auth.login') }}"  class="btn-login px-4 py-2 rounded-lg bg-gradient-to-b from-red-700 to-crimson text-white shadow-md hover:shadow-lg transition-shadow">Login</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="page bg-white/5 rounded-lg m-4 p-5 shadow-[0_6px_18px_rgba(0,0,0,0.5)]" aria-hidden="false">
+      <h2 class="text-2xl font-bold mb-4">Welcome</h2>
+      <p class="text-gray-200">Use the Register button to create an account. Admin can grant permissions via User Management.</p>
+    </section>
+
+    <section id="records" class="page bg-white/5 rounded-lg m-4 p-5 shadow-[0_6px_18px_rgba(0,0,0,0.5)] hidden" aria-hidden="true">
+      <h2 class="text-2xl font-bold mb-4">Patient Records</h2>
+      <div class="mb-3">
+        <label class="text-sm">Load CSV: <input id="csvFileInput" type="file" accept=".csv" class="ml-2 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-navy/60 file:text-white hover:file:bg-navy/80 cursor-pointer"></label>
+        <span id="dataStatus" class="ml-3 text-gray-300"></span>
+      </div>
+      <div class="mb-3">
+        <label class="text-sm">Search: <input id="recordSearch" type="search" placeholder="Search records..." class="ml-2 px-3 py-2 rounded-lg bg-white/10 border border-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-700"></label>
+      </div>
+      <div class="overflow-auto max-h-[60vh]">
+        <table id="recordsTable" class="w-full border-collapse">
+          <thead id="recordsHead"></thead>
+          <tbody id="recordsBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="userManagement" class="page bg-white/5 rounded-lg m-4 p-5 shadow-[0_6px_18px_rgba(0,0,0,0.5)] hidden" aria-hidden="true">
+      <h2 class="text-2xl font-bold mb-4">User Management</h2>
+      <p class="text-gray-200 mb-4">Administrators may edit user permissions and remove users.</p>
+      <table id="usersTable" class="w-full border-collapse">
+        <thead><tr class="bg-navy/60"><th class="text-left p-3 text-gray-100">Name</th><th class="text-left p-3 text-gray-100">Email</th><th class="text-left p-3 text-gray-100">Role</th><th class="text-left p-3 text-gray-100">Permissions</th><th class="text-left p-3 text-gray-100">Actions</th></tr></thead>
+        <tbody id="usersTableBody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer class="p-3 text-center bg-black/25 border-t border-white/5 text-gray-200">
+    <p>&copy; 2025 Demo. Not for production.</p>
+  </footer>
+
+  <!-- Login modal -->
+  <div id="loginModal" class="login-modal fixed inset-0 hidden items-center justify-center bg-black/60 z-[10000]" aria-hidden="true">
+    <div class="login-panel bg-white/95 text-gray-900 w-[360px] max-w-[calc(100%-40px)] p-5 rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.3)] relative">
+      <button id="closeLoginBtn" class="login-close absolute top-2 right-2 bg-transparent border-0 text-2xl cursor-pointer hover:text-red-700">&times;</button>
+      <h2 class="text-xl font-bold mb-4">Login</h2>
+      <form id="loginForm">
+        <label class="block mb-2 text-sm">Email <input type="email" name="email" required class="w-full p-2 mt-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-700"></label>
+        <label class="block mb-2 text-sm">Password <input type="password" name="password" required class="w-full p-2 mt-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-700"></label>
+        <div class="mt-2 flex gap-2">
+          <button type="submit" class="btn-submit px-4 py-2 rounded-lg bg-gradient-to-b from-red-500 to-red-700 text-white hover:from-red-600 hover:to-red-800 cursor-pointer">Sign in</button>
+          <button type="button" id="cancelLogin" class="btn-cancel px-4 py-2 rounded-lg bg-gray-600 text-white hover:bg-gray-700 cursor-pointer">Cancel</button>
+        </div>
+        <div id="loginError" class="login-error text-red-700 mt-2 text-sm min-h-[18px]"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Register modal -->
+  <div id="registerModal" class="login-modal fixed inset-0 hidden items-center justify-center bg-black/60 z-[10000]" aria-hidden="true">
+    <div class="login-panel bg-white/95 text-gray-900 w-[360px] max-w-[calc(100%-40px)] p-5 rounded-lg shadow-[0_10px_30px_rgba(0,0,0,0.3)] relative">
+      <button id="closeRegisterBtn" class="login-close absolute top-2 right-2 bg-transparent border-0 text-2xl cursor-pointer hover:text-red-700">&times;</button>
+      <h2 class="text-xl font-bold mb-4">Register</h2>
+      <form id="registerForm">
+        <label class="block mb-2 text-sm">Full name <input name="fullName" required class="w-full p-2 mt-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-700"></label>
+        <label class="block mb-2 text-sm">Email <input type="email" name="email" required class="w-full p-2 mt-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-700"></label>
+        <label class="block mb-2 text-sm">Password <input type="password" name="password" required minlength="8" class="w-full p-2 mt-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-700"></label>
+        <label class="block mb-2 text-sm">Role
+          <select name="role" required class="w-full p-2 mt-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-700">
+            <option value="doctor">Doctor</option>
+            <option value="nurse">Nurse</option>
+            <option value="researcher">Researcher</option>
+          </select>
+        </label>
+        <div class="mt-2 flex gap-2">
+          <button type="submit" class="btn-submit px-4 py-2 rounded-lg bg-gradient-to-b from-red-500 to-red-700 text-white hover:from-red-600 hover:to-red-800 cursor-pointer">Register</button>
+          <button type="button" id="cancelRegister" class="btn-cancel px-4 py-2 rounded-lg bg-gray-600 text-white hover:bg-gray-700 cursor-pointer">Cancel</button>
+        </div>
+        <div id="registerError" class="login-error text-red-700 mt-2 text-sm min-h-[18px]"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- scripts: users.js first, then PapaParse, then app script -->
+  <script src="users.js"></script>
+  <script src="https://unpkg.com/papaparse@latest/papaparse.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

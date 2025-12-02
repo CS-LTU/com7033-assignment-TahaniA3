@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+
+{% block title %}Add Patient - Stroke Records Portal{% endblock %}
+
+{% block nav_title %}<span id="pageTitle">Add New Patient</span>{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8 max-w-4xl">
+    <!-- Form Container -->
+    <div class="bg-white/5 backdrop-blur-md rounded-lg shadow-[0_6px_18px_rgba(0,0,0,0.5)] border border-white/10 p-8">
+      <div class="mb-6">
+        <h2 id="formTitle" class="text-2xl font-bold text-white mb-2">Patient Information</h2>
+        <p class="text-gray-400 text-sm">Fill in all required fields to add a new patient record</p>
+      </div>
+
+      <!-- Success/Error Message -->
+      <div id="formMessage" class="mb-4 hidden p-4 rounded-lg"></div>
+
+      <form id="addPatientForm" class="space-y-6">
+        <!-- Personal Information Section -->
+        <div class="border-b border-white/10 pb-6">
+          <h3 class="text-lg font-semibold text-white mb-4">Personal Details</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="patientId" class="block text-sm font-medium text-gray-300 mb-1.5">
+                Patient ID <span class="text-red-400">*</span>
+              </label>
+              <input 
+                type="text" 
+                id="patientId" 
+                name="id" 
+                required 
+                class="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                placeholder="e.g., 9437"
+              >
+            </div>
+
+            <div>
+              <label for="age" class="block text-sm font-medium text-gray-300 mb-1.5">
+                Age <span class="text-red-400">*</span>
+              </label>
+              <input 
+                type="number" 
+                id="age" 
+                name="age" 
+                required 
+                min="0" 
+                max="120"
+                class="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                placeholder="e.g., 67"
+              >
+            </div>
+
+            <div>
+              <label for="gender" class="block text-sm font-medium text-gray-300 mb-1.5">
+                Gender <span class="text-red-400">*</span>
+              </label>
+              <select 
+                id="gender" 
+                name="gender" 
+                required 
+                class="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
+              >
+                <option value="" class="bg-gray-800">Select gender</option>
+                <option value="Male" class="bg-gray-800">Male</option>
+                <option value="Female" class="bg-gray-800">Female</option>
+                <option value="Other" class="bg-gray-800">Other</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="maritalStatus" class="block text-sm font-medium text-gray-300 mb-1.5">
+                Marital Status
+              </label>
+              <select 
+                id="maritalStatus" 
+                name="ever_married" 
+                class="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
+              >
+                <option value="" class="bg-gray-800">Select status</option>
+                <option value="Yes" class="bg-gray-800">Married</option>
+                <option value="No" class="bg-gray-800">Never Married</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Medical History Section -->
+        <div class="border-b border-white/10 pb-6">
+          <h3 class="text-lg font-semibold text-white mb-4">Medical History</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="hypertension" class="block text-sm font-medium text-gray-300 mb-1.5">
+                Hypertension <span class="text-red-400">*</span>
+              </label>
+              <select 
+                id="hypertension" 
+                name="hypertension" 
+                required 
+                class="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
+              >
+                <option value="" class="bg-gray-800">Select status</option>
+                <option value="1" class="bg-gray-800">Yes</option>
+                <option value="0" class="bg-gray-800">No</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="heartDisease" class="block text-sm font-medium text-gray-300 mb-1.5">
+                Heart Disease <span class="text-red-400">*</span>
+              </label>
+              <select 
+                id="heartDisease" 
+                name="heart_disease" 
+                required 
+                class="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
+              >
+                <option value="" class="bg-gray-800">Select status</option>
+                <option value="1" class="bg-gray-800">Yes</option>
+                <option value="0" class="bg-gray-800">No</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="avgGlucose" class="block text-sm font-medium text-gray-300 mb-1.5">
+                Average Glucose Level (mg/dL)
+              </label>
+              <input 
+                type="number" 
+                id="avgGlucose" 
+                name="avg_glucose_level" 
+                step="0.01"
+                min="0"
+                class="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                placeholder="e.g., 106.5"
+              >
+            </div>
+
+            <div>
+              <label for="bmi" class="block text-sm font-medium text-gray-300 mb-1.5">
+                BMI (Body Mass Index)
+              </label>
+              <input 
+                type="number" 
+                id="bmi" 
+                name="bmi" 
+                step="0.1"
+                min="0"
+                max="100"
+                class="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
+                placeholder="e.g., 25.3"
+              >
+            </div>
+
+            <div>
+              <label for="stroke" class="block text-sm font-medium text-gray-300 mb-1.5">
+                Stroke History
+              </label>
+              <select 
+                id="stroke" 
+                name="stroke" 
+                class="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
+              >
+                <option value="0" class="bg-gray-800">No</option>
+                <option value="1" class="bg-gray-800">Yes</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lifestyle Information Section -->
+        <div class="border-b border-white/10 pb-6">
+          <h3 class="text-lg font-semibold text-white mb-4">Lifestyle & Environment</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label for="workType" class="block text-sm font-medium text-gray-300 mb-1.5">
+                Work Type <span class="text-red-400">*</span>
+              </label>
+              <select 
+                id="workType" 
+                name="work_type" 
+                required 
+                class="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
+              >
+                <option value="" class="bg-gray-800">Select work type</option>
+                <option value="Private" class="bg-gray-800">Private</option>
+                <option value="Self-employed" class="bg-gray-800">Self-employed</option>
+                <option value="Govt_job" class="bg-gray-800">Government Job</option>
+                <option value="children" class="bg-gray-800">Children</option>
+                <option value="Never_worked" class="bg-gray-800">Never Worked</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="residenceType" class="block text-sm font-medium text-gray-300 mb-1.5">
+                Residence Type <span class="text-red-400">*</span>
+              </label>
+              <select 
+                id="residenceType" 
+                name="Residence_type" 
+                required 
+                class="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
+              >
+                <option value="" class="bg-gray-800">Select residence type</option>
+                <option value="Urban" class="bg-gray-800">Urban</option>
+                <option value="Rural" class="bg-gray-800">Rural</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="smokingStatus" class="block text-sm font-medium text-gray-300 mb-1.5">
+                Smoking Status
+              </label>
+              <select 
+                id="smokingStatus" 
+                name="smoking_status" 
+                class="w-full px-4 py-2.5 rounded-lg bg-white/10 border border-white/10 text-white focus:outline-none focus:ring-2 focus:ring-red-700 focus:border-transparent"
+              >
+                <option value="" class="bg-gray-800">Select status</option>
+                <option value="formerly smoked" class="bg-gray-800">Formerly Smoked</option>
+                <option value="never smoked" class="bg-gray-800">Never Smoked</option>
+                <option value="smokes" class="bg-gray-800">Smokes</option>
+                <option value="Unknown" class="bg-gray-800">Unknown</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex items-center justify-between pt-4">
+   
+          <div class="flex gap-3">
+            <button 
+              type="reset" 
+              class="px-6 py-3 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-all"
+            >
+              Reset Form
+            </button>
+            <button 
+              type="submit" 
+              class="px-6 py-3 rounded-lg bg-gradient-to-b from-red-700 to-crimson text-white font-semibold hover:from-red-800 hover:to-red-900 transition-all shadow-md hover:shadow-lg"
+            >
+              Add Patient
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    const form = document.getElementById('addPatientForm');
+    const formMessage = document.getElementById('formMessage');
+    let editMode = false;
+    let originalPatientId = null;
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // Show loading state
+      showMessage(editMode ? 'Updating patient data...' : 'Saving patient data...', 'info');
+      
+      // Get form data
+      const formData = new FormData(form);
+      
+      try {
+        let response;
+        
+        if (editMode) {
+          // Update existing patient
+          response = await fetch(`/api/patient/${originalPatientId}`, {
+            method: 'PUT',
+            body: formData
+          });
+        } else {
+          // Create new patient
+          response = await fetch("{{ url_for('dashboard.add_patient') }}", {
+            method: 'POST',
+            body: formData
+          });
+        }
+        
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
+          showMessage(editMode ? 'Patient updated successfully!' : 'Patient added successfully to database!', 'success');
+          
+          // Clear edit mode data from sessionStorage
+          if (editMode) {
+            sessionStorage.removeItem('editPatient');
+          }
+          
+          // Reset form
+          form.reset();
+          
+          // Auto-generate next ID (only in add mode)
+          if (!editMode) {
+            await generateNextId();
+          }
+          
+          // Redirect after 2 seconds
+          setTimeout(() => {
+            window.location.href = "{{ url_for('dashboard.get_data') }}";
+          }, 2000);
+        } else {
+          showMessage(result.message || (editMode ? 'Failed to update patient' : 'Failed to add patient'), 'error');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        showMessage('Error connecting to server: ' + error.message, 'error');
+      }
+    });
+
+    function showMessage(message, type) {
+      formMessage.textContent = message;
+      let className = 'mb-4 p-4 rounded-lg ';
+      if (type === 'success') {
+        className += 'bg-green-500/20 text-green-400 border border-green-500/30';
+      } else if (type === 'info') {
+        className += 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
+      } else {
+        className += 'bg-red-500/20 text-red-400 border border-red-500/30';
+      }
+      formMessage.className = className;
+      formMessage.classList.remove('hidden');
+      
+      // Hide after 5 seconds
+      if (type !== 'info') {
+        setTimeout(() => {
+          formMessage.classList.add('hidden');
+        }, 5000);
+      }
+    }
+
+    // Auto-generate patient ID from MongoDB
+    async function generateNextId() {
+      try {
+        const response = await fetch("{{ url_for('dashboard.api_patients') }}");
+        if (response.ok) {
+          const patients = await response.json();
+          if (patients.length > 0) {
+            const maxId = Math.max(...patients.map(p => parseInt(p.id) || 0));
+            document.getElementById('patientId').value = maxId + 1;
+          } else {
+            document.getElementById('patientId').value = '10001';
+          }
+        }
+      } catch (error) {
+        console.error('Error generating ID:', error);
+        document.getElementById('patientId').value = '10001';
+      }
+    }
+
+    // Check for edit mode and populate form
+    window.addEventListener('load', function() {
+      const editPatientData = sessionStorage.getItem('editPatient');
+      
+      if (editPatientData) {
+        // Edit mode
+        editMode = true;
+        const patient = JSON.parse(editPatientData);
+        originalPatientId = patient.id;
+        
+        // Update UI for edit mode
+        document.getElementById('pageTitle').textContent = 'Update Patient';
+        document.getElementById('formTitle').textContent = 'Update Patient Information';
+        document.querySelector('button[type="submit"]').textContent = 'Update Patient';
+        
+        // Populate form fields
+        document.getElementById('patientId').value = patient.id;
+        document.getElementById('patientId').readOnly = true; // Disable ID editing
+        document.getElementById('patientId').classList.add('bg-gray-100', 'cursor-not-allowed');
+        
+        document.getElementById('age').value = patient.age || '';
+        document.getElementById('gender').value = patient.gender || '';
+        document.getElementById('hypertension').value = patient.hypertension || '0';
+        document.getElementById('heartDisease').value = patient.heart_disease || '0';
+        document.getElementById('maritalStatus').value = patient.ever_married || '';
+        document.getElementById('workType').value = patient.work_type || '';
+        document.getElementById('residenceType').value = patient.Residence_type || '';
+        document.getElementById('avgGlucose').value = patient.avg_glucose_level || '';
+        document.getElementById('bmi').value = patient.bmi || '';
+        document.getElementById('smokingStatus').value = patient.smoking_status || '';
+        document.getElementById('stroke').value = patient.stroke || '0';
+      } else {
+        // Add mode - generate new ID
+        generateNextId();
+      }
+    });
+  </script>
+{% endblock %}
