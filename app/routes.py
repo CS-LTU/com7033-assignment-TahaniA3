@@ -1,5 +1,6 @@
-from flask import Blueprint, redirect, render_template, request, jsonify, url_for
-from app.config import collection
+from flask import Blueprint, redirect, render_template, request, jsonify, url_for, session
+from app.config import collection, users_collection
+from werkzeug.security import generate_password_hash, check_password_hash
 from bson import json_util
 import json  
 
@@ -13,11 +14,21 @@ def login():
     
     if request.method == 'POST':
         print('login attempt')
-        username = request.form.get('email')
+        email = request.form.get('email')
         password = request.form.get('password')
         
-        # Dummy authentication logic
-        if username == 'admin@example.com' and password == 'AdminPass':
+        # Input validation
+        if not email or not password:
+            return render_template('login.html', error='Email and password are required')
+        
+        # Find user in database
+        user = users_collection.find_one({'email': email})
+        
+        if user and check_password_hash(user['password'], password):
+            # Store user info in session
+            session['user'] = email
+            session['fullName'] = user.get('fullName', 'User')
+            print(f'Login successful: {email}')
             return redirect(url_for('dashboard.dashboard'))
         else:
             print('bad login')
@@ -26,33 +37,66 @@ def login():
 
 @auth_bp.route('/logout')
 def logout():
-    return redirect(url_for('auth.home'))
+    session.clear()
+    return redirect(url_for('auth.login'))
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register(): 
     if request.method == 'POST':
-        username = request.form.get('email')
+        email = request.form.get('email')
         password = request.form.get('password')
         fullName = request.form.get('fullName')
         role = request.form.get('role')
         
-        print(f'Registration: {username}, {fullName}, {role}')
+        # Input validation
+        if not email or not password or not fullName:
+            return render_template('register.html', error='All fields are required')
         
-        # Dummy registration logic - redirect to login after success
-        return redirect(url_for('auth.login'))
+        if len(password) < 6:
+            return render_template('register.html', error='Password must be at least 6 characters')
+        
+        # Check if user already exists
+        existing_user = users_collection.find_one({'email': email})
+        if existing_user:
+            return render_template('register.html', error='Email already registered')
+        
+        # Hash password and store user in database
+        hashed_password = generate_password_hash(password)
+        user_data = {
+            'email': email,
+            'password': hashed_password,
+            'fullName': fullName,
+            'role': role or 'user'
+        }
+        
+        try:
+            users_collection.insert_one(user_data)
+            print(f'Registration successful: {email}, {fullName}, {role}')
+            return redirect(url_for('auth.login'))
+        except Exception as e:
+            print(f'Registration error: {e}')
+            return render_template('register.html', error='Registration failed. Please try again.')
+    
     return render_template('register.html')
 
 dashboard_bp = Blueprint('dashboard', __name__)
 
 @dashboard_bp.route('/dashboard')
-def dashboard():    
+def dashboard():
+    if 'user' not in session:
+        return redirect(url_for('auth.login'))
     return render_template('dashboard.html')
 
 @dashboard_bp.route('/patient')
-def get_data(): 
+def get_data():
+    if 'user' not in session:
+        return redirect(url_for('auth.login'))
     return render_template('patient.html')
 
 @dashboard_bp.route('/add_patient', methods=['GET', 'POST'])
 def add_patient():
+    if 'user' not in session:
+        return redirect(url_for('auth.login'))
+    
     if request.method == 'GET':
         return render_template('add_patient.html')
     
@@ -90,6 +134,9 @@ def add_patient():
 @dashboard_bp.route('/api/patients')
 def api_patients():
     """Fetch all patient records from MongoDB."""
+    if 'user' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
     try:
         # Exclude the 'columns' field and MongoDB _id from response
         patients = list(collection.find({}, {'_id': 0, 'columns': 0}))
@@ -101,6 +148,9 @@ def api_patients():
 @dashboard_bp.route('/api/dashboard-stats')
 def api_dashboard_stats():
     """Calculate aggregate statistics from MongoDB for dashboard."""
+    if 'user' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
     try:
         total_patients = collection.count_documents({})
         stroke_cases = collection.count_documents({'stroke': 1})
@@ -139,6 +189,9 @@ def api_dashboard_stats():
 @dashboard_bp.route('/api/patient/<int:patient_id>', methods=['PUT'])
 def update_patient(patient_id):
     """Update an existing patient record."""
+    if 'user' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
     try:
         # Get form data
         patient_data = {
@@ -169,6 +222,9 @@ def update_patient(patient_id):
 @dashboard_bp.route('/api/patient/<int:patient_id>', methods=['DELETE'])
 def delete_patient(patient_id):
     """Delete a patient record."""
+    if 'user' not in session:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
     try:
         result = collection.delete_one({'id': patient_id})
         
