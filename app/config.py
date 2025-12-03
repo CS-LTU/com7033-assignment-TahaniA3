@@ -13,5 +13,7 @@ mongo_version = server_info["version"]
 print(f"mongoDB version: {mongo_version}")
 
 db = client["stroke_database"]
-collection = db["stroke_collection"] 
+collection = db["stroke_collection"]
+# Users collection for authentication
+users_collection = db["users"] 
 
