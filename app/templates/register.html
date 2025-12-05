@@ -39,7 +39,10 @@
       </div>
 
       <!-- Register Form -->
-      <form id="registerForm" class="space-y-4">
+      <form id="registerForm" action="{{ url_for('auth.register') }}" method="POST" class="space-y-4">
+        <!-- CSRF Protection -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+        
         <div>
           <label for="fullName" class="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
           <input 

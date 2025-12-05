@@ -1,0 +1,5 @@
+# Test Requirements
+# Install these packages to run the test suite
+
+pytest>=7.4.0
+pytest-cov>=4.1.0
