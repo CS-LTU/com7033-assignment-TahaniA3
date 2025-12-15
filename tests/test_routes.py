@@ -1,6 +1,47 @@
 """
-Unit tests for authentication and patient management routes.
-Tests cover login, registration, CRUD operations, and security features.
+================================================================================
+ROUTE TESTING MODULE
+================================================================================
+Author: Tahani A3
+Course: COM7033 - Secure Software Development
+Institution: Leeds Trinity University
+
+Purpose:
+    Comprehensive unit and integration tests for all application routes
+    including authentication, patient CRUD operations, and security features.
+
+Test Coverage:
+    - Authentication (8 tests): Login, registration, logout, password validation
+    - Dashboard Access (4 tests): Authentication requirements, access control
+    - Patient CRUD (9 tests): Create, read, update, delete operations
+    - Security Features (3 tests): Password hashing, injection prevention
+    - Input Validation (3 tests): Empty fields, invalid data, type conversion
+
+Total Test Cases: 39 tests
+
+Testing Framework:
+    - pytest: Main testing framework
+    - pytest fixtures: Reusable test data (conftest.py)
+    - Flask test_client: HTTP request simulation
+    - MongoDB: Database operations testing
+
+Running Tests:
+    pytest tests/test_routes.py -v              # Verbose output
+    pytest tests/test_routes.py --cov=app       # With coverage
+    pytest tests/test_routes.py::TestAuthentication  # Specific class
+
+Security Tests:
+    - Password hashing verification (PBKDF2-SHA256)
+    - NoSQL injection prevention
+    - Session protection
+    - Input sanitization
+
+Dependencies:
+    - pytest >= 7.4.0
+    - Flask test client
+    - MongoDB test database
+    - Werkzeug security utilities
+================================================================================
 """
 import pytest
 from app.config import users_collection, collection
@@ -8,7 +49,27 @@ from werkzeug.security import check_password_hash
 
 
 class TestAuthentication:
-    """Test suite for authentication routes (login, register, logout)."""
+    """
+    Test Suite: Authentication Routes
+    ==================================
+    Tests all authentication-related functionality including login,
+    registration, logout, and password security.
+    
+    Routes Tested:
+        - POST /login: User authentication
+        - GET /login: Login page rendering
+        - POST /register: User registration
+        - GET /register: Registration page rendering
+        - GET /logout: Session termination
+    
+    Security Features Tested:
+        - Password hashing (PBKDF2-SHA256)
+        - Session management
+        - Input validation
+        - Duplicate email prevention
+    
+    Test Count: 8 tests
+    """
     
     def test_login_page_loads(self, client):
         """Test that the login page loads successfully."""

@@ -1,60 +1,134 @@
+<!--
+================================================================================
+BASE TEMPLATE - Stroke Patient Management System
+================================================================================
+Author: Tahani A3
+Course: COM7033 - Secure Software Development
+Institution: Leeds Trinity University
+
+Purpose:
+    Base template that provides the common layout structure for all pages
+    including navigation, styling, and scripts.
+
+Template Blocks:
+    {% block title %} - Page title (default: "Stroke Records Portal")
+    {% block nav_title %} - Navigation header title
+    {% block content %} - Main page content
+    {% block extra_head %} - Additional head elements
+    {% block scripts %} - Additional JavaScript
+
+Features:
+    - Responsive navigation bar with user info
+    - Tailwind CSS for styling
+    - Chart.js for data visualization
+    - Glass-morphism design with backdrop blur
+    - Secure logout functionality
+
+Security:
+    - CSRF tokens automatically included in forms (Flask-WTF)
+    - HTTPOnly session cookies
+    - Secure navigation with authentication checks
+
+Dependencies:
+    - Tailwind CSS CDN (styling framework)
+    - Chart.js CDN (data visualization)
+    - PapaParse (CSV processing)
+================================================================================
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Character encoding and viewport for responsive design -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    
+    <!-- Dynamic page title -->
     <title>{% block title %}Stroke Records Portal{% endblock %}</title>
+    
+    <!-- Tailwind CSS Framework for utility-first styling -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js for interactive data visualizations -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Tailwind CSS Custom Configuration -->
     <script>
+      // Custom color palette for medical/healthcare theme
       tailwind.config = {
         theme: {
           extend: {
             colors: {
-              'dark-blue': '#021026',
-              'navy': '#0a2b4a',
-              'crimson': '#8b0000',
+              'dark-blue': '#021026',  // Deep blue for background
+              'navy': '#0a2b4a',       // Navy for cards and accents
+              'crimson': '#8b0000',    // Medical red for alerts/buttons
             }
           }
         }
       }
     </script>
+    
+    <!-- Custom Global Styles -->
     <style>
       body {
+        /* Multi-layered gradient background for depth */
         background: 
           radial-gradient(circle at top right, rgba(139,0,0,0.14), transparent 20%),
           radial-gradient(circle at bottom left, rgba(139,0,0,0.14), transparent 20%),
           #021026;
-        background-attachment: fixed;
+        background-attachment: fixed; /* Background stays fixed during scroll */
       }
     </style>
-    {% block extra_head %}{% endblock %}
-</head>
-<body class="min-h-screen text-gray-100">
-  <!-- Top Navigation -->
-  <nav class="bg-black/35 backdrop-blur-md border-b border-white/5 px-6 py-4">
     <div class="flex items-center justify-between">
+      <!-- Left Side: Logo and Navigation Links -->
       <div class="flex items-center space-x-8">
+        <!-- Dynamic page title -->
         <h1 class="text-2xl font-bold text-white">{% block nav_title %}Stroke Records Portal{% endblock %}</h1>
+        
+        <!-- Main navigation menu (hidden on mobile, flex on desktop) -->
         <div class="hidden md:flex space-x-4">
+          <!-- Dashboard link with active state highlighting -->
           <a href="{{ url_for('dashboard.dashboard') }}" class="text-gray-300 hover:text-white transition-colors {% if request.endpoint == 'dashboard.dashboard' %}text-white font-semibold{% endif %}">
             Dashboard
           </a>
+          <!-- Patient list link -->
           <a href="{{ url_for('dashboard.get_data') }}" class="text-gray-300 hover:text-white transition-colors {% if request.endpoint == 'dashboard.get_data' %}text-white font-semibold{% endif %}">
            Patients
           </a>
+          <!-- Add patient link -->
           <a href="{{ url_for('dashboard.add_patient') }}" class="text-gray-300 hover:text-white transition-colors {% if request.endpoint == 'dashboard.add_patient' %}text-white font-semibold{% endif %}">
             Add Patient
           </a>
         </div>
       </div>
+      
+      <!-- Right Side: User Info and Logout -->
       <div class="flex items-center space-x-4">
+        <!-- Display logged-in user name -->
         <span class="text-sm text-gray-300">Dr. Admin User</span>
+        
+        <!-- Secure logout button -->
         <a href="{{ url_for('auth.logout') }}" class="px-4 py-2 rounded-lg bg-gradient-to-b from-red-700 to-crimson text-white text-sm hover:from-red-800 hover:to-red-900 transition-all">
           Logout
         </a>
       </div>
     </div>
+  </nav>
+
+  <!-- ================================================================== -->
+  <!-- Main Content Area -->
+  <!-- ================================================================== -->
+  <!-- Content from child templates is injected here -->
+  {% block content %}{% endblock %}
+
+  <!-- ================================================================== -->
+  <!-- JavaScript Libraries -->
+  <!-- ================================================================== -->
+  <!-- PapaParse: CSV parsing library for client-side data processing -->
+  <script src="https://unpkg.com/papaparse@latest/papaparse.min.js"></script>
+  
+  <!-- Additional scripts from child templates -->
+  {% block scripts %}{% endblock %}
+</body>
+</html>iv>
   </nav>
 
   <!-- Main Content -->

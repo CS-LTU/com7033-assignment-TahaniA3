@@ -1,3 +1,37 @@
+<!--
+================================================================================
+DASHBOARD TEMPLATE - Statistics and Analytics
+================================================================================
+Author: Tahani A3
+Course: COM7033 - Secure Software Development
+
+Purpose:
+    Main dashboard displaying patient statistics, charts, and analytics
+    for stroke patient management system.
+
+Features:
+    - 4 Statistics Cards (Total Patients, Stroke Cases, High Risk, Avg Age)
+    - 3 Interactive Charts (Risk Distribution, Gender Distribution, Age Groups)
+    - Real-time data fetched via AJAX from /api/dashboard-stats endpoint
+    - Responsive grid layout with Tailwind CSS
+    - Chart.js visualizations (Doughnut, Bar, Line charts)
+
+Data Sources:
+    - API Endpoint: /api/dashboard-stats
+    - Database: stroke_patient_db (patients collection)
+    - Total Records: 5,110+ patients
+
+Security:
+    - Protected route (requires authentication)
+    - Session validation via Flask session
+    - Data sanitized before display
+
+Dependencies:
+    - base.html (parent template)
+    - Chart.js (data visualization)
+    - Tailwind CSS (responsive design)
+================================================================================
+-->
 {% extends "base.html" %}
 
 {% block title %}Medical Dashboard - Stroke Records Portal{% endblock %}
@@ -6,9 +40,12 @@
 
 {% block content %}
 <div class="container mx-auto px-6 py-8">
-    <!-- Stats Cards -->
+    <!-- ================================================================== -->
+    <!-- Statistics Cards Section -->
+    <!-- ================================================================== -->
+    <!-- Displays 4 key metrics in responsive grid layout -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      <!-- Total Patients -->
+      <!-- Card 1: Total Patients Count -->
       <div class="bg-white/5 backdrop-blur-md rounded-lg p-6 shadow-[0_6px_18px_rgba(0,0,0,0.5)] border border-white/10">
         <div class="flex items-center justify-between">
           <div>

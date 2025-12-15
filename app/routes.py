@@ -1,17 +1,79 @@
+"""
+Application Routes Module
+==========================
+This module defines all HTTP routes and request handlers for the Stroke Patient
+Management System. It implements secure authentication, patient CRUD operations,
+and RESTful API endpoints.
+
+Blueprint Architecture:
+    - auth_bp: Authentication routes (login, register, logout)
+    - dashboard_bp: Patient management and dashboard routes
+
+Security Features:
+    - Rate limiting to prevent brute force attacks
+    - CSRF protection on all forms (Flask-WTF)
+    - Input sanitization to prevent XSS attacks
+    - NoSQL injection prevention
+    - Session-based authentication
+    - Audit logging for all sensitive operations
+
+Routes Overview:
+    Authentication:
+        GET/POST /login - User login
+        GET/POST /register - User registration
+        GET /logout - User logout
+        
+    Patient Management:
+        GET /dashboard - Dashboard with statistics
+        GET /patient - Patient list
+        GET/POST /add_patient - Add new patient
+        
+    API Endpoints:
+        GET /api/patients - Fetch all patients
+        GET /api/dashboard-stats - Get statistics
+        PUT /api/patient/<id> - Update patient
+        DELETE /api/patient/<id> - Delete patient
+        GET /api/my-activity-report - User activity log
+        GET /api/database-status - Database health check
+
+Author: Tahani A3
+Course: COM7033 - Secure Software Development
+"""
+
+# ============================================================================
+# Import Required Libraries
+# ============================================================================
 from flask import Blueprint, redirect, render_template, request, jsonify, url_for, session
 from app.config import collection, users_collection
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson import json_util
 import json
-from app.db_manager import DatabaseManager  # Multiple interconnected databases manager
-from app.security import SecurityUtils  # Security utilities for input sanitization
-from app import limiter  # Rate limiter
-import secrets  
+from app.db_manager import DatabaseManager  # Cross-database operations
+from app.security import SecurityUtils  # Input validation and sanitization
+from app import limiter  # Rate limiting for attack prevention
+import secrets  # Cryptographically secure random tokens
 
+# ============================================================================
+# Blueprint Registration
+# ============================================================================
+# Blueprints allow modular organization of routes
+# auth_bp: Handles authentication-related routes
 auth_bp = Blueprint('auth', __name__)
+
+# ============================================================================
+# Public Routes (No Authentication Required)
+# ============================================================================
 
 @auth_bp.route('/')
 def home():
+    """
+    Home page route - Landing page for the application
+    
+    Returns:
+        HTML: Renders index.html template with welcome message and login/register links
+        
+    Security: Public route, no authentication required
+    """
     return render_template('index.html')
 @auth_bp.route('/login', methods=['GET', 'POST'])
 @limiter.limit("5 per minute")  # Rate limiting: prevent brute force attacks
